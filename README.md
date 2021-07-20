@@ -1,4 +1,4 @@
-# MendelToText
+# ComposeText
 Takes as input two files, containing :
 - a list of common words
 - the list of all element's symbols of the Mendeleïev
