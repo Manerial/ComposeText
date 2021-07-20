@@ -7,8 +7,9 @@ For each word, the program will look into the element's symbols list and check i
 
 If it can, the word will be written in a file with all it's ways to be written with element's symbols.
 
-This program will remove all accents but cannot remove some characters : "'[]+-{}!;:.123456789 (etc)
-Any word containing one of these caracters will not be parse.
+This program will remove all accents in the word list but will not remove some characters : "'[]+-{}!;:.123456789 (etc)
+
+These characters can be use in the elements list as well.
 
 ## How to use it ?
 First, get an IDE (Eclipse)
