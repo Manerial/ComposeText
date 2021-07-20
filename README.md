@@ -33,8 +33,8 @@ To launch it, you can :
 To change it : open the project from the Eclipse window -> open the src folder -> open the launcher package (folder) -> double click on Launcher.java
 
 ## RESSOURCES
-This project uses only one resource file, the excel that store the encounter tables.
+This project two resource file, a list of words to parse and a list of elements.
 
-This file is stored in the resource folder of the EncounterRPG project.
+This files are stored in the resource folder of the project.
 
-You can update them as much as you want (adding/removing rows of data).
+You can update them as much as you want (adding/removing data).
