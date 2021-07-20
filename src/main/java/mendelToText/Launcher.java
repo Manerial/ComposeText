@@ -1,44 +1,55 @@
 package mendelToText;
 
 import java.io.IOException;
-import java.text.Normalizer;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import utilities.WordParser;
 import utilities.WordsFilesManager;
 
 public class Launcher {
+	private static String inputFile = "French.txt";
+	private static String elementsFile = "PeriodicTable.txt";
+	private static String outputFile = "Result.txt";
 
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		List<String> wordList = WordsFilesManager.parseElementsFileInList("French.txt");
-		wordList.replaceAll(string -> Normalizer.normalize(string, Normalizer.Form.NFD));
-		wordList.replaceAll(string -> string.replaceAll("[^\\p{ASCII}]", ""));
-		
-		Set<String> wordSet = new TreeSet<>();
-		wordSet.addAll(wordList);
-		
-		List<String> periodicTable = WordsFilesManager.parseElementsFileInList("PeriodicTable.txt");
-		periodicTable.replaceAll(String::toLowerCase);
-		
-		
-		Map<String, Set<String>> result = new TreeMap<>();
-		String firstLetter = "";
-		for(String word : wordSet) {
-			Set<String> setForWord = WordParser.isComposedByElements(word.toLowerCase(), periodicTable);
-			if(setForWord.size() > 0) {
-				result.put(word, setForWord);
-			}
-			if(!firstLetter.equals(word.substring(0, 1))) {				
-				firstLetter = word.substring(0, 1);
-				System.out.print(firstLetter);
+		String message = parseArgs(args);
+		if(message != null) {
+			System.out.print(message);
+		} else {
+			Set<String> wordSet = WordsFilesManager.ExtractWordsFromFile(inputFile);
+			Set<String> periodicTable = WordsFilesManager.ExtractWordsFromFile(elementsFile);		
+			Map<String, Set<String>> result = WordParser.parseList(wordSet, periodicTable);
+			WordsFilesManager.PrintMapInFile(outputFile, result);
+		}
+	}
+	
+	private static String parseArgs(String[] args) {
+		String message = null;
+		for(int i = 0; i < args.length; i++) {
+			switch(args[i]) {
+			case "-i" :
+				inputFile = args[i+1];
+				break;
+			case "-e":
+				elementsFile = args[i+1];
+				break;
+			case "-o" :
+				outputFile = args[i+1];
+				break;
+			case "-h":
+				message = String.join("\r\n",
+						"",
+						"Available arguments: ",
+						"",
+						"-i <input>\t: The file containing the inputs. Default : French.txt",
+						"-e <elements>\t: The file containing the elements. Default : PeriodicTable.txt",
+						"-o <output>\t: The file containing the results. Default : Result.txt",
+						"-h\t\t: Help");
+				break;
 			}
 		}
-		WordsFilesManager.printStringListInFile("result.txt", result);
+		
+		return message;
 	}
-
 }

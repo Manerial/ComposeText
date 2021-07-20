@@ -9,30 +9,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class WordsFilesManager {
 	private static String RESOURCE_PATH = System.getProperty("user.dir") + "\\src\\main\\resources\\";
 
-	/**
-	 * Read the content of a ELEMENT file and return a list
-	 * 
-	 * @param analyzer : The analyzer that contains the ELEMENT file name
-	 * @return A list of words contained in the elementFile
-	 * @throws IOException : All the IO exceptions
-	 */
-	public static List<String> parseElementsFileInList(String fileName) throws IOException {
-		ArrayList<String> result = new ArrayList<String>();
-		BufferedReader br = getBufferReader(RESOURCE_PATH + fileName);
-		String line;
-		while ((line = br.readLine()) != null) {
-			result.add(line);
-		}
-		br.close();
-		return result;
+	public static Set<String> ExtractWordsFromFile(String fileName) throws IOException {
+		List<String> wordList = WordsFilesManager.getLinesfromFile(fileName);
+		// Remove accents or special chars
+		wordList.replaceAll(string -> Normalizer.normalize(string, Normalizer.Form.NFD));
+		wordList.replaceAll(string -> string.replaceAll("[^\\p{ASCII}]", ""));
+		wordList.replaceAll(String::toLowerCase);
+		
+		// Using a TreeSet will remove doubles and sort by alphabetical order
+		Set<String> wordSet = new TreeSet<>();
+		wordSet.addAll(wordList);
+		return wordSet;
 	}
 
 	/**
@@ -42,7 +39,7 @@ public class WordsFilesManager {
 	 * @param result : The list of words to save
 	 * @throws IOException : All the IO exceptions
 	 */
-	public static void printStringListInFile(String fileName, Map<String, Set<String>> result) throws IOException {
+	public static void PrintMapInFile(String fileName, Map<String, Set<String>> result) throws IOException {
 		PrintWriter resultFile = getPrinterWriter(RESOURCE_PATH + fileName);
 		
 		String resultString = result.toString();
@@ -51,6 +48,24 @@ public class WordsFilesManager {
 		
 		resultFile.println(resultString);
 		resultFile.close();
+	}
+
+	/**
+	 * Read the content of a ELEMENT file and return a list
+	 * 
+	 * @param analyzer : The analyzer that contains the ELEMENT file name
+	 * @return A list of words contained in the elementFile
+	 * @throws IOException : All the IO exceptions
+	 */
+	private static List<String> getLinesfromFile(String fileName) throws IOException {
+		ArrayList<String> result = new ArrayList<String>();
+		BufferedReader br = getBufferReader(RESOURCE_PATH + fileName);
+		String line;
+		while ((line = br.readLine()) != null) {
+			result.add(line);
+		}
+		br.close();
+		return result;
 	}
 
 	/**
