@@ -1,4 +1,4 @@
-package mendelToText;
+package composeText;
 
 import java.io.IOException;
 import java.util.Map;
@@ -11,19 +11,29 @@ public class Launcher {
 	private static String inputFile = "French.txt";
 	private static String elementsFile = "PeriodicTable.txt";
 	private static String outputFile = "Result.txt";
+	private static String sequence = "";
+	private static E_Parser parser = E_Parser.composition;
 
 	public static void main(String[] args) throws IOException {
 		String message = parseArgs(args);
+		Map<String, Set<String>> result = null;
 		if(message != null) {
 			System.out.print(message);
 		} else {
 			Set<String> wordSet = WordsFilesManager.ExtractWordsFromFile(inputFile);
-			Set<String> periodicTable = WordsFilesManager.ExtractWordsFromFile(elementsFile);		
-			Map<String, Set<String>> result = WordParser.parseList(wordSet, periodicTable);
-			WordsFilesManager.PrintMapInFile(outputFile, result);
+			switch (parser) {
+			case composition:
+				Set<String> periodicTable = WordsFilesManager.ExtractWordsFromFile(elementsFile);	
+				result = WordParser.wordListCompositionWithElements(wordSet, periodicTable);
+				break;
+			case removeLetter:
+				result = WordParser.wordListWithoutSequence(wordSet, sequence);
+				break;
+			}
 		}
+		WordsFilesManager.PrintMapInFile(outputFile, result);
 	}
-	
+
 	private static String parseArgs(String[] args) {
 		String message = null;
 		for(int i = 0; i < args.length; i++) {
@@ -37,11 +47,20 @@ public class Launcher {
 			case "-o" :
 				outputFile = args[i+1];
 				break;
+			case "-c":
+				parser = E_Parser.composition;
+				break;
+			case "-rl":
+				parser = E_Parser.removeLetter;
+				sequence = args[i+1];
+				break;
 			case "-h":
 				message = String.join("\r\n",
 						"",
 						"Available arguments: ",
 						"",
+						"-rl <letter>\t: Use the \"remove letter\" parser",
+						"-c \t\t: Use the \"composition\" parser (default)",
 						"-i <input>\t: The file containing the inputs. Default : French.txt",
 						"-e <elements>\t: The file containing the elements. Default : PeriodicTable.txt",
 						"-o <output>\t: The file containing the results. Default : Result.txt",
@@ -49,7 +68,11 @@ public class Launcher {
 				break;
 			}
 		}
-		
+
 		return message;
+	}
+
+	enum E_Parser {
+		removeLetter, composition
 	}
 }

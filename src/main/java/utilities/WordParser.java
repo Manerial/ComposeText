@@ -4,13 +4,31 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class WordParser {
-	public static Map<String, Set<String>> parseList(Set<String> wordSet, Set<String> periodicTable) {
+	
+
+	public static Map<String, Set<String>> wordListWithoutSequence(Set<String> wordSet, String sequence) {
+		Map<String, Set<String>> result = new TreeMap<>();
+		for(String word : wordSet) {
+			if(word.contains(sequence)) {
+				String newWord = word.replaceAll(sequence, "");
+				if(wordSet.contains(newWord)) {
+					Set<String> element = new TreeSet<>();
+					element.add(newWord);
+					result.put(word, element);
+				}
+			}
+		}
+		return result;
+	}
+	
+	public static Map<String, Set<String>> wordListCompositionWithElements(Set<String> wordSet, Set<String> elements) {
 		Map<String, Set<String>> result = new TreeMap<>();
 		String currentLetterToDisplay = "";
 		for(String word : wordSet) {
-			Set<String> setForWord = isComposedByElementsInList(word.toLowerCase(), periodicTable);
+			Set<String> setForWord = isComposedByElementsInList(word.toLowerCase(), elements);
 			if(setForWord.size() > 0) {
 				result.put(word, setForWord);
 			}
