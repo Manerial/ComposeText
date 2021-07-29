@@ -3,5 +3,5 @@
   <groupId>com.jher</groupId>
   <artifactId>mendelToText</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>MendelToText</name>
+  <name>ComposeText</name>
 </project>
