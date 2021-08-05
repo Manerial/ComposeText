@@ -12,7 +12,7 @@ public class Launcher {
 	private static String elementsFile = "PeriodicTable.txt";
 	private static String outputFile = "Result.txt";
 	private static String sequence = "";
-	private static E_Parser parser = E_Parser.composition;
+	private static E_Parser parser;
 
 	public static void main(String[] args) throws IOException {
 		String message = parseArgs(args);
@@ -23,11 +23,16 @@ public class Launcher {
 			Set<String> wordSet = WordsFilesManager.ExtractWordsFromFile(inputFile);
 			switch (parser) {
 			case composition:
+				System.out.print("Parsing " + inputFile + " composition with elements of " + elementsFile);
 				Set<String> periodicTable = WordsFilesManager.ExtractWordsFromFile(elementsFile);	
 				result = WordParser.wordListCompositionWithElements(wordSet, periodicTable);
 				break;
 			case removeLetter:
+				System.out.print("Try removing " + sequence + " in each elements of " + inputFile);
 				result = WordParser.wordListWithoutSequence(wordSet, sequence);
+				break;
+			default:
+				System.out.print("No parser selected. Use -h for help");
 				break;
 			}
 		}
@@ -59,8 +64,11 @@ public class Launcher {
 						"",
 						"Available arguments: ",
 						"",
-						"-rl <letter>\t: Use the \"remove letter\" parser",
-						"-c \t\t: Use the \"composition\" parser (default)",
+						"===Parsers===",
+						"-rl <letter>\t: Use the \"remove letter\" parser : try to remove a sequence in a list of elements and check if the new element still exist in the list.",
+						"-c \t\t: Use the \"composition\" parser : try to compose elements of a list with elements of an other list. Example : the word \"coco\" and the periodic table => [COCO, CoCo, CoCO, COCo] (C = Carbin, O = Oxygen, Co = Cobalt)",
+						"",
+						"===Options===",
 						"-i <input>\t: The file containing the inputs. Default : French.txt",
 						"-e <elements>\t: The file containing the elements. Default : PeriodicTable.txt",
 						"-o <output>\t: The file containing the results. Default : Result.txt",
