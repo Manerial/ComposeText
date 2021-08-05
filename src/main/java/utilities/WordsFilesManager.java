@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class WordsFilesManager {
-	private static String RESOURCE_PATH = System.getProperty("user.dir") + "\\src\\main\\resources\\";
+	public static final String RESOURCES_PATH = "resources/";
 
 	public static Set<String> ExtractWordsFromFile(String fileName) throws IOException {
 		List<String> wordList = WordsFilesManager.getLinesfromFile(fileName);
@@ -40,7 +40,7 @@ public class WordsFilesManager {
 	 * @throws IOException : All the IO exceptions
 	 */
 	public static void PrintMapInFile(String fileName, Map<String, Set<String>> result) throws IOException {
-		PrintWriter resultFile = getPrinterWriter(RESOURCE_PATH + fileName);
+		PrintWriter resultFile = getPrinterWriter(RESOURCES_PATH + fileName);
 		
 		String resultString = result.toString();
 		resultString = resultString.substring(1, resultString.length() - 1);
@@ -59,7 +59,7 @@ public class WordsFilesManager {
 	 */
 	private static List<String> getLinesfromFile(String fileName) throws IOException {
 		ArrayList<String> result = new ArrayList<String>();
-		BufferedReader br = getBufferReader(RESOURCE_PATH + fileName);
+		BufferedReader br = getBufferReader(RESOURCES_PATH + fileName);
 		String line;
 		while ((line = br.readLine()) != null) {
 			result.add(line);
